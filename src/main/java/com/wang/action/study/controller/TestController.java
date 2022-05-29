@@ -11,7 +11,7 @@ import java.util.Date;
 public class TestController {
 
     @GetMapping(value = "hello")
-    public String hello(@RequestParam(value = "参数", name = "param", required = false) String param) {
+    public String hello(String param) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return "hello " + param + "     " + sdf.format(new Date());
     }
