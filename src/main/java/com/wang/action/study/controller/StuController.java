@@ -22,7 +22,6 @@ public class StuController {
     public String teacher(String name) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return "hello " + name + "，访问时间：" + sdf.format(new Date());
-
     }
 
 
