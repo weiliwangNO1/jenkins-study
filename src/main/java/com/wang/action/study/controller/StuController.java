@@ -21,9 +21,12 @@ public class StuController {
     @GetMapping(value = "/teacher")
     public String teacher(String name) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return "hello " + name + "，访问时间：" + sdf.format(new Date()) ;
+        return "hello " + name + "，访问时间：" + sdf.format(new Date());
 
-    @GetMapping(value = "student")
+    }
+
+
+    @GetMapping(value = "/student")
     public String student() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return "hello world!!!，访问时间：" + sdf.format(new Date()) ;
