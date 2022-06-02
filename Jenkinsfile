@@ -4,6 +4,11 @@ pipeline {
     agent any
 
     //定义环境信息
+    environment {
+      name = "weiliwang"
+      address = "重庆市大渡口区"
+    }
+
 
     //定义流水线的加工流程
     stages {
