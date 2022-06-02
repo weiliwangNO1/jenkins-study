@@ -1,6 +1,11 @@
 //定义jenkins流水线
 pipeline {
+    //定义代理
     agent any
+
+    //定义环境信息
+
+    //定义流水线的加工流程
     stages {
         stage('编译') {
             steps {
