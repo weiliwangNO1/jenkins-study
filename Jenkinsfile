@@ -15,6 +15,10 @@ pipeline {
         stage('编译') {
             steps {
                 echo "编译。。。"
+                echo "$name"
+                echo "address"
+                //当前路径以及目录下的文件信息
+                sh 'pwd && ls -alh'
             }
         }
         stage('构建') {
