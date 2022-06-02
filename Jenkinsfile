@@ -23,7 +23,7 @@ pipeline {
                 //输出docker版本
                 sh 'docker version'
                 //输出maven版本
-                sh 'mvn -v'
+                //sh 'mvn -v'
             }
         }
         stage('编译') {
