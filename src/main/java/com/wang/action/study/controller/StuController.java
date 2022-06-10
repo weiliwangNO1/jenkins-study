@@ -32,4 +32,9 @@ public class StuController {
 
     }
 
+    @GetMapping(value = "/test")
+    public String test() {
+        return "hello world!!!";
+    }
+
 }
