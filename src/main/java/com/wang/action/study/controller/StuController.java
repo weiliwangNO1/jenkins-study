@@ -34,7 +34,7 @@ public class StuController {
 
     @GetMapping(value = "/test")
     public String test() {
-        return "hello world!!!";
+        return "hello world!!! github是否配置了加速器";
     }
 
 }
