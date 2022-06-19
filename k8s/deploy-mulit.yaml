@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: apps/v1   #版本
+metadata:
+  name: deploy-mulit-containers
+  namespace: test-ns
+  labels:
+    name: deploy-mulit-containers
+    author: weiliwang
+    type: mulitcontainer
+spec:   #规约，期望状态
+  replicas: 1   #1一个副本
+  selector:
+    matchLabels:
+      name: deploy-mulit-containers
+      author: weiliwang
+      type: mulitcontainer
+  template:
+    metadata:
+      labels:
+        name: deploy-mulit-containers
+        author: weiliwang
+        type: mulitcontainer
+    spec:
+      initContainers:
+        - name: alpine
+          image: alpine
+          command:
+            - /bin/sh
+            - -c
+            - echo "weiliwang initContainers init！！！"
+      containers:
+        - name: mulit-mysql8
+          image: mysql:8.0.29
+          env: #设置mysql容器环境变量
+            - name: MYSQL_ROOT_PASSWORD
+              value: 1qaz2wsx!
+            - name: character-set-server
+              value: utf8mb4
+            - name: collation-server
+              value: utf8mb4_unicode_ci
+            - name: MYSQL_DATABASE
+              value: weili666
+          ports: #暴露mysql端口
+              - containerPort: 3306
+        - name: mulit-nginx
+          image: nginx:1.21
+          ports:
+            - containerPort: 80
+

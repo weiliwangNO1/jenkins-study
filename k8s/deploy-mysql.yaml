@@ -1,0 +1,36 @@
+kind: Deployment   #定义Deployment
+apiVersion: apps/v1   #版本
+metadata:    ##定义元数据
+  name: deploy-mysql   ##Deployment名称为deploy-mysql
+  namespace: test-ns   #使用的名称空间为test-ns
+  labels:    #为Deployment设置标签
+    name: deploy-mysql
+    author: weiliwang
+spec:    ##设置期望状态  规约
+  replicas: 1   #只存在一个副本
+  selector:
+    matchLabels:
+      name: deploy-mysql
+      author: weiliwang
+  template:   #标准末班
+    metadata:
+      name: deploy-mysql
+      namespace: test-ns
+      labels:
+        name: deploy-mysql
+        author: weiliwang
+    spec:   #规约，期望状态
+      containers:
+        - name: deploy-pod-mysql8   #给mysql容器器一个名字
+          image: mysql:8.0.29   #使用mysql:8.0.29镜像
+          env:   #设置mysql容器环境变量
+            - name: MYSQL_ROOT_PASSWORD
+              value: 1qaz2wsx!
+            - name: character-set-server
+              value: utf8mb4
+            - name: collation-server
+              value: utf8mb4_unicode_ci
+            - name: MYSQL_DATABASE
+              value: weili666
+          ports:  #暴露mysql端口
+            - containerPort: 3306

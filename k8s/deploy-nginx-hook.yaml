@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1   #版本
+metadata:
+  name: deploy-nginx-hook
+  namespace: test-ns
+  labels:
+    name: deploy-nginx-hook
+    author: weiliwang
+    type: nginx
+spec:
+  replicas: 1   #一个副本
+  selector:
+    matchLabels:
+      name: deploy-nginx-hook
+      author: weiliwang
+      type: nginx
+  template:
+    metadata:
+      name: deploy-nginx-hook
+      namespace: test-ns
+      labels:
+        name: deploy-nginx-hook
+        author: weiliwang
+        type: nginx
+    spec:
+      containers:
+        - name: deploy-nginx-hook
+          image: nginx:1.21
+          lifecycle:
+            postStart:
+              httpGet:
+                host: "192.168.36.86"
+                port: 80
+                path: "/postStart-aaa"
+            preStop:
+              httpGet:
+                host: "192.168.36.86"
+                port: 80
+                path: "preStop"

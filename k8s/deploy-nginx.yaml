@@ -1,0 +1,20 @@
+apiVersion: apps/v1   #成为typemta  元类型
+kind: Deployment   #称为typemeta  元类型
+metadata:      #元数据
+  name: my-nignx10
+  labels:
+    name: my-nginx10
+    run : my-nginx10
+spec:    #规格、或者是期望状态
+  replicas: 2  #两个副本
+  selector:
+    matchLabels:
+      run: my-nginx10    #标签选择
+  template:
+    metadata:
+      labels:
+        run: my-nginx10    #设置标签
+    spec:
+      containers:
+        - name: my-nginx10   #镜像名称
+          image: nginx:1.20.2    #使用镜像版本
