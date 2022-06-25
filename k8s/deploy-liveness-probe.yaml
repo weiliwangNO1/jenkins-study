@@ -1,0 +1,37 @@
+kind: Deployment   #定义deploy
+apiVersion: apps/v1   #版本
+metadata:    #定义元数据
+  name: deploy-liveness-probe-nginx   #定义的deploy名称为deploy-liveness-prode-nginx存活探针
+  namespace: test-ns    #使用的名称空间维test-ns
+  labels:    #定义标签
+    app: deploy-liveness-probe-nginx
+spec:   #规约，pod创建的期望状态
+  selector:    #标签选择器匹配 app: deploy-liveness-probe-nginx
+    matchLabels:
+      app: deploy-liveness-probe-nginx
+  template:   #模板
+    metadata:
+      labels:
+        app: deploy-liveness-probe-nginx
+    spec:   #规约，定义容器期望状态
+      volumes:   #数据卷声明
+        - name: livenessprobe-nginx-html    #卷名称
+          hostPath:    #数据卷映射主机位置
+            path: /liveness-nginx
+      containers:   #容器，定义单个容器
+        - name: liveness-probe-nginx
+          image: nginx:1.21
+          volumeMounts:   #绒布容器数据卷挂载
+            - mountPath: /usr/share/nginx/html
+              name: livenessprobe-nginx-html   #容器内容部的/usr/share/nginx/html板顶到外部物理机/nginx
+          livenessProbe:
+            httpGet:
+              port: 80   #测试端口
+              path: /test.html   #测试路径
+            periodSeconds: 5   #每隔5秒运行
+            timeoutSeconds: 5   #超过5秒没有反应，说明失败
+            successThreshold: 1  #成功1次即成功
+            failureThreshold: 3   #失败3次算失败
+
+
+
