@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-nginx
+  namespace: test-ns
+  labels:
+    app: service-nginx
+spec:
+  selector:
+    app: deploy-probe-nginx   #匹配deploy-probe.yaml
+  ports:
+    - port: 80
+      targetPort: 80
+  type: NodePort
