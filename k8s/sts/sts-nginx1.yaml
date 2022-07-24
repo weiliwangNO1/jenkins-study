@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet  # 有状态副本集
+metadata:
+  name: stateful-nginx
+  namespace: test-ns
+spec:
+  selector:
+    matchLabels:
+      app: ss-nginx # has to match .spec.template.metadata.labels
+  serviceName: "nginx"  ## 服务名，指定加到那个service里面
+  replicas: 3 # 三个副本
+  podManagementPolicy: OrderedReady  #pod管理策略 OrderedReady有序默认，Parallel并行
+  updateStrategy:
+    rollingUpdate:
+      partition: 1  #表示序号从大于等于1开始顺序更新
+  template: ## Pod模板
+    metadata:
+      labels:
+        app: ss-nginx # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.22
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx  # 和上面的serviceName
+  namespace: test-ns
+spec:
+  selector:
+    app: ss-nginx
+  clusterIP: None  # 不要分配ClusterIP,headless service，整个集群的Pod能直接访问
+  type: ClusterIP  #浏览器目前不能访问，mysql\mq。继续使用ingress网络定义所有的访问逻辑
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
