@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-test03
+  namespace: test-ns
+spec:
+  activeDeadlineSeconds: 60   #job执行成功后可以存活10秒后complate
+  completions: 10  #job需要执行10次
+  parallelism: 3 #一次并发创建三个job
+  template:
+    metadata:
+      labels:
+        app: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl:5.34.0
+          command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never   #pod失败重启策略，从不
+  backoffLimit: 4   #job失败重启次数

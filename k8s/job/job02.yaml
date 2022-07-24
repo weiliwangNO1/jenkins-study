@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-test
+  namespace: test-ns
+spec:
+  template:
+    metadata:
+      labels:
+        app: pi
+    spec:
+      containers:
+        - name: pi
+          image: perl:5.34.0
+          command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never   #pod失败重启策略，从不
+  backoffLimit: 4   #job失败重启次数
