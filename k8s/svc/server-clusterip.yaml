@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-clusterip-test
+  namespace: test-ns
+spec:
+  selector:
+    app: canary-nginx
+  type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: nginx-service
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口
+    - name: tomcat-service
+      port: 8080    #集群端口
+      targetPort: 8080   #映射到pod内部端口

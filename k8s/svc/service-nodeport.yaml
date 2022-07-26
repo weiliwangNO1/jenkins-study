@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-nodeport-test
+  namespace: test-ns
+spec:
+  selector:
+    app: canary-nginx   #根据标签命中的pod
+  type: NodePort   #ExternalName, ClusterIP, NodePort, and LoadBalancer  NodePort给每个节点同时开同一个端口，提供给外部访问
+  ports:
+    - name: nginx-service
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口
+      #nodePort: 30056   #如果没有指定nodeport，那么会自动分配30000-30256范围内的端口
