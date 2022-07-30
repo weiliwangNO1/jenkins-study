@@ -1,0 +1,8 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-externalname-test
+  namespace: test-ns
+spec:
+  type: ExternalName   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  externalName: baidu.com  #访问类型为externalname的service，最终会访问集群外的服务

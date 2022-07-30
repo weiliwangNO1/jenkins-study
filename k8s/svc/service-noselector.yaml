@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-noselector-test
+  namespace: test-ns
+spec:
+  type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: service-noselector
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: service-noselector-test   #要和noselector的service的name保持一致
+  namespace: test-ns
+subsets:
+  - addresses:
+      - ip: 192.168.169.158
+      - ip: 192.168.36.121
+      - ip: 192.168.169.149
+    ports:
+      - name: service-noselector  #要和service的name保持一致
+        port: 80
+        protocol: TCP
