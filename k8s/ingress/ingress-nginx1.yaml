@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingresstest1
+spec:
+  rules:
+    - host: ingresstest.com   #使用域名
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: canary-service-v1   #service名称
+                port:
+                  number: 80   #service暴露的端口

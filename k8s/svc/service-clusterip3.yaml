@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-clusterip-test3
+spec:
+  selector:
+    name: my-nginx10   #根据标签命中的pod
+  type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: nginx-service
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口
