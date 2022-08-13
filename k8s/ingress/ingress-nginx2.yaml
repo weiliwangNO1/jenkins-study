@@ -7,7 +7,8 @@ metadata:
 spec:
   ingressClassName: nginx   #需要添加已存在的ingressclasses
   rules:
-    - http:
+    - host: ingresstest.com   #指定域名
+      http:
         paths:
           - path: /testpath
             pathType: Prefix
