@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx6-session   #设置ing名称
+  namespace: test-ns   #如果制定了名称空间，那么绑定的service必须在该名称空间下，否则无法访问
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2   #路径重写
+    nginx.ingress.kubernetes.io/limit-rps: "1"   #1秒内只允许访问1次，超过则返回503
+    nginx.ingress.kubernetes.io/affinity: "cookie"   #使用cookie亲和
+    nginx.ingress.kubernetes.io/affinity-mode: "balanced"   #获得最大粘性时，使用balanced重新分发一些会话
+    nginx.ingress.kubernetes.io/session-cookie-name: "weiliwang"  #设置cookie的名字
+spec:
+  ingressClassName: nginx   #需要添加已存在的ingressclasses
+  rules:
+    - host: ingresstest.com   #指定域名
+      http:
+        paths:
+          - path: /api(/|$)(.*)    #重写路径，那么/api将被忽略
+            pathType: Prefix
+            backend:
+              service:
+                name: service-nginx   #指向service服务并且该service在test-ns名称空间下
+                port:
+                  number: 80   #service内部暴露的端口
