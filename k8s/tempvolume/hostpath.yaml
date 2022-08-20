@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-hostpath
+  namespace: test-ns
+spec:
+  containers:
+    - image: nginx
+      name: test-nginx-hostpath
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html   #指定容器内的目录要挂载
+          name: index-volume   #声明一个卷index-volume
+  volumes:
+    - name: index-volume
+      hostPath:
+        path: /pod-nginx/html   #挂载到宿主机上的/pod-nginx/html目录下
+        type: DirectoryOrCreate  #如果在给定路径上什么都不存在，那么将根据需要创建空目录，权限设置为 0755，具有与 kubelet 相同的组和属主信息

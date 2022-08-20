@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-emptydir
+  namespace: test-ns
+spec:
+  containers:
+    - image: nginx
+      name: test-nginx-emptydir
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: index-volume
+  volumes:
+    - name: index-volume
+      emptyDir:
+        medium: ""
