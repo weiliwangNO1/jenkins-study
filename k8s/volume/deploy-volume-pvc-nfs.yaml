@@ -1,0 +1,132 @@
+kind: Deployment   #定义Deployment
+apiVersion: apps/v1   #版本
+metadata:    #定义元数据
+  name: deploy-volume-nfs3   #Deployment名称为deploy-volume-nfs3
+  namespace: test-ns   #使用的名称空间为test-ns
+  labels:    #为Deployment设置标签
+    name: deploy-volume-nfs3
+    type: deploy
+spec:    ##设置期望状态  规约
+  replicas: 2   #存在两个副本
+  selector:
+    matchLabels:
+      type: pod-nfs3   #选中标签为pod-nginx-nfs的pod
+  template:   #标准
+    metadata:
+      name: pod-nfs3
+      namespace: test-ns
+      labels:
+        type: pod-nfs3
+    spec:   #规约，期望状态
+      containers:
+        - name: pod-nginx-volume-nfs3   #给nginx容器起一个名字
+          image: nginx   #使用nginx最新镜像
+          imagePullPolicy: IfNotPresent   #如果本地存在该镜像，那么不从远程仓库拉取该镜像
+          ports:  #暴露mnginx端口
+            - containerPort: 80
+          volumeMounts:
+            - name: clmom-html
+              mountPath: /usr/share/nginx/html/   #指明挂载容器的指定目录
+        - name: pod-mysql2-configmap-secret   #给mysql容器起一个名字
+          image: mysql:8.0.29   #使用mysql:8.0.29镜像
+          imagePullPolicy: IfNotPresent   #如果本地存在该镜像，那么不从远程仓库拉取该镜像
+          env: #设置mysql容器环境变量
+            - name: MYSQL_ROOT_PASSWORD    #root用户的密码
+              valueFrom:
+                secretKeyRef:
+                  name: secret-mysql-nfs3   #secret名字
+                  key: mysql_root_password   #secret-mysql下的key
+            - name: MYSQL_USER    #自定义用户名
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-mysql-nfs3   # configmap名字
+                  key: mysql_user   # configmap的key值
+            - name: MYSQL_PASSWORD    #自定义用户名的密码
+              valueFrom:
+                secretKeyRef:
+                  name: secret-mysql-nfs3   #secret名字
+                  key: mysql_password  #自定义用户名的密码
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-mysql-nfs3   #  configmap名字
+                  key: mysql_database   # 指定的configmap下的key值
+          ports: #暴露mysql端口
+            - containerPort: 13306
+          volumeMounts:
+            - mountPath: /var/lib/mysql/   #容器的/var/lib/mysql 目录挂载
+              name: clmom-mysql-storage
+      volumes:
+        - name: clmom-html   #与volumeMounts指定的name值相同
+          persistentVolumeClaim:
+            claimName: pvc-nginx-nfs   #对应pvc的name值
+        - name: clmom-mysql-storage  # 与voluemMounts指定的name相同
+          persistentVolumeClaim:
+            claimName: pvc-mysql-nfs   #对应pvc的name值
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-nginx-nfs
+  namespace: test-ns
+spec:
+  selector:
+    type: pod-nfs3   #根据标签命中的pod
+  type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: nginx-service-nfs
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-mysql-nfs3
+  namespace: test-ns
+data:
+  mysql_root_password: MXFhejJ3c3gh   #   mysql数据库root用户密码  Base64加密后的内容
+  mysql_password: MXFhejJ3c3gh  #  mysql自定义的用户的密码，对应的configmap的mysql_user
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-mysql-nfs3
+  namespace: test-ns
+data:
+  mysql_user: test1   # mysql自定义用户名
+  mysql_database: cl_testmom   #指定mysql的数据库名
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim    #持久卷申请
+metadata:
+  name: pvc-nginx-nfs
+  namespace: test-ns
+  labels:
+    name: pvc-nginx-nfs
+spec:
+  storageClassName: pv-nfs   #匹配persistentVolume的storageClassName
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim    #持久卷申请
+metadata:
+  name: pvc-mysql-nfs
+  namespace: test-ns
+  labels:
+    name: pvc-mysql-nfs
+spec:
+  storageClassName: pv-nfs   #匹配persistentVolume的storageClassName
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

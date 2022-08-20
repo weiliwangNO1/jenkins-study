@@ -1,0 +1,50 @@
+kind: Deployment   #定义Deployment
+apiVersion: apps/v1   #版本
+metadata:    #定义元数据
+  name: deploy-nginx-volume-nfs   #Deployment名称为deploy-mysql-volume-nfs
+  namespace: test-ns   #使用的名称空间为test-ns
+  labels:    #为Deployment设置标签
+    name: deploy-nginx-volume-nfs
+    type: deploy
+spec:    ##设置期望状态  规约
+  replicas: 2   #存在两个副本
+  selector:
+    matchLabels:
+      type: pod-nginx-nfs   #选中标签为pod-nginx-nfs的pod
+  template:   #标准
+    metadata:
+      name: pod-nginx-nfs
+      namespace: test-ns
+      labels:
+        type: pod-nginx-nfs
+    spec:   #规约，期望状态
+      containers:
+        - name: pod-nginx-volume-nfs   #给nginx容器起一个名字
+          image: nginx   #使用nginx最新镜像
+          imagePullPolicy: IfNotPresent   #如果本地存在该镜像，那么不从远程仓库拉取该镜像
+          ports:  #暴露mnginx端口
+            - containerPort: 80
+          volumeMounts:
+            - name: clmom-html
+              mountPath: /usr/share/nginx/html/   #指明挂载容器的指定目录
+      volumes:
+        - name: clmom-html   #与volumeMounts指定的name值相同
+          nfs:
+            path: /nfs/data/clmom-dev-html/  #挂载到nfs服务端指定的目录下  目录需要手动创建？
+            server: 192.168.56.106  #nfs服务端的ip地址
+            readOnly: false   #不止是可读的
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-nginx-nfs
+  namespace: test-ns
+spec:
+  selector:
+    type: pod-nginx-nfs   #根据标签命中的pod
+  type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: nginx-service-nfs
+      port: 80   #集群端口
+      targetPort: 80   #映射到pod内部端口

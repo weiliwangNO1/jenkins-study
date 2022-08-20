@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-nginx   #创建名称为pv-nfs-nginx的PersistentVolue的持久卷
+  namespace: test-ns  #使用的名称空间
+  labels:
+    type: pv-nfs-nginx
+spec:
+  capacity:
+    storage: 50Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: pv-nfs
+  nfs:   #使用NFS方式挂载
+    path: /nfs/data/clmom-dev-html   #指定挂载到nfs的目录下
+    server: 192.168.56.106   # nfs服务端ip
