@@ -7,12 +7,12 @@ metadata:
     type: pv-nfs-mysql
 spec:
   capacity:
-    storage: 100Mi
-  volumeMode: Filesystem
+    storage: 100Mi    #声明资源大小
+  volumeMode: Filesystem    #存储卷模式
   accessModes:
     - ReadWriteMany   #ReadWriteOnce卷可以被一个节点以读写方式挂载。ReadOnlyMany卷可以被多个节点以只读方式挂载。ReadWriteMany卷可以被多个节点以读写方式挂载。ReadWriteOncePod卷可以被单个 Pod 以读写方式挂载
-  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
-  storageClassName: pv-nfs
+  persistentVolumeReclaimPolicy: Retain  # 回收策略  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: pv-nfs   #去匹配PVC声明的storageClassname
   nfs:   #使用NFS方式挂载
     path: /nfs/data/clmom-dev-mysql   #指定挂载到nfs的目录下
     server: 192.168.56.106   # nfs服务端ip
