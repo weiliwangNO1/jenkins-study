@@ -1,3 +1,68 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nfs-client-provisioner
+  namespace: test-ns
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nfs-client-provisioner-runner
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: run-nfs-client-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: test-ns
+roleRef:
+  kind: ClusterRole
+  name: nfs-client-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: test-ns
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: test-ns
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: test-ns
+roleRef:
+  kind: Role
+  name: leader-locking-nfs-client-provisioner
+  apiGroup: rbac.authorization.k8s.io
+
+---
 apiVersion: apps/v1
 kind: Deployment    #定义storageClass的provisioner
 metadata:
@@ -6,7 +71,7 @@ metadata:
     app: nfs-client-provisioner  # replace with namespace where provisioner is deployed
   namespace: test-ns   #指定test-ns名称空间
 spec:
-  replicas: 1
+  replicas: 1  #1个副本
   strategy:
     type: Recreate   #Recreate重新创建、RollingUpdate滚动更新（默认）
   selector:
@@ -20,6 +85,7 @@ spec:
       containers:  #serviceAccountName: nfs-client-provisioner   #如果不用这个呢？
         - name: nfs-client-provisioner   #容器I
           image: registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images/nfs-subdir-external-provisioner:v4.0.2  #provisioner镜像
+          imagePullPolicy: IfNotPresent  #如果本次存在，那么不从远程拉取
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
@@ -35,13 +101,3 @@ spec:
           nfs:
             server: 192.168.56.106    #指定nfs服务端的IP地址
             path: /nfs/data   #nfs服务端的共享目录
-
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: nfs-sc-0
-  namespace: test-ns
-provisioner: k8s-sigs.io/nfs-subdir-external-provisioner # or choose another name, must match deployment's env PROVISIONER_NAME'
-parameters:
-  archiveOnDelete: "false"

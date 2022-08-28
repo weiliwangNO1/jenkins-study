@@ -72,7 +72,7 @@ metadata:
   labels:
     name: pvc-nginx-nfs-sc
 spec:
-  storageClassName: nfs-sc-1   # 指定sc名称 这里storageClass动态分配创建pv
+  storageClassName: nfs-sc-0   # 指定sc名称 这里storageClass动态分配创建pv
   accessModes:
     - ReadWriteMany   #允许多个回话读写
   resources:
@@ -88,7 +88,7 @@ metadata:
   labels:
     name: pvc-mysql-nfs-sc
 spec:
-  storageClassName: nfs-sc-1   # 指定sc名称 这里storageClass动态分配创建pv
+  storageClassName: nfs-sc-0   # 指定sc名称 这里storageClass动态分配创建pv
   accessModes:
     - ReadWriteMany    #允许多个会话读写
   resources:
