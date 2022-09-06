@@ -1,0 +1,3 @@
+使用指令：
+kubectl api-resourcse -o wide
+查看verbs列，列举的对应资源的所有动词

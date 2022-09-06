@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role   #定义角色名称
+metadata:
+  namespace: test-ns
+  name: pod-reader
+rules:
+  - apiGroups: [""] # "" apiGroups 是包含资源的 apiGroup 的名称。 如果指定了多个 API 组，则允许对任何 API 组中的其中一个枚举资源来请求任何操作。 "" 表示核心 API 组，“*” 表示所有 API 组
+    resources: ["pods"]  #resources 是此规则所适用的资源的列表。 “*” 表示所有资源。
+    verbs: ["create", "delete", "deletecollection", "get", "list", "patch", "update", "watch"]   #动词，是适用于此规则中所包含的所有 ResourceKinds 的动作。 “*” 表示所有动作
+  - apiGroups: [""]
+    resources: ["deployments"]
+    verbs: ["create", "delete", "deletecollection", "get", "list", "patch", "update", "watch"]
