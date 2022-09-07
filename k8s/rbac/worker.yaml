@@ -1,0 +1,65 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: worker
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]   #namespace只有查看和列举的权限
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods"]    #对所有namespace下的pods只有查看、列举的权限
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["deployments"]    #对所有namespace下的deploy只有查看、列举的权限
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "" ]
+    resources: [ "services" ]    #对所有namespace下的deploy只有查看、列举的权限
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "" ]
+    resources: [ "ingresses" ]    #对所有namespace下的deploy只有查看、列举的权限
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "roles" ]
+    resources: [ "ingresses" ]    #对所有namespace下的deploy只有查看、列举的权限
+    verbs: [ "get", "list", "watch" ]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: worker
+  namespace: test-ns
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]    #对test-ns名称空间下的pods由创建、查看、列举的权限
+    verbs: ["create","get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: worker
+  namespace: test-ns
+subjects:
+  - kind: ServiceAccount
+    name: worker #区分大小写的  需要绑定的serviceaccount
+    namespace: test-ns   #指定是哪个名称空间下的
+    apiGroup: ""
+roleRef:   #绑定角色role
+  kind: Role
+  name: worker
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: worker
+subjects:
+  - kind: ServiceAccount
+    name: worker      # 'name' 是区分大小写的  需要绑定的serviceaccount
+    namespace: test-ns   #指定是哪个名称空间下的
+    apiGroup: ""
+roleRef:
+  kind: ClusterRole   #需要绑定的角色
+  name: worker
+  apiGroup: rbac.authorization.k8s.io
