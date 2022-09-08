@@ -6,19 +6,16 @@ rules:
   - apiGroups: [""]
     resources: ["namespaces"]   #namespace只有查看和列举的权限
     verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["pods"]    #对所有namespace下的pods只有查看、列举的权限
-    verbs: ["get", "list", "watch"]
-  - apiGroups: [""]
-    resources: ["deployments"]    #对所有namespace下的deploy只有查看、列举的权限
+  - apiGroups: [ "" ]
+    resources: [ "pods" ]    #对所有namespace下的pods只有查看、列举的权限
+    verbs: [ "get", "list", "watch" ]
+  - apiGroups: [ "" ]
+    resources: [ "deployments" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
   - apiGroups: [ "" ]
     resources: [ "services" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
   - apiGroups: [ "" ]
-    resources: [ "ingresses" ]    #对所有namespace下的deploy只有查看、列举的权限
-    verbs: [ "get", "list", "watch" ]
-  - apiGroups: [ "roles" ]
     resources: [ "ingresses" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
 
@@ -29,9 +26,9 @@ metadata:
   name: worker
   namespace: test-ns
 rules:
-  - apiGroups: [""]
-    resources: ["pods"]    #对test-ns名称空间下的pods由创建、查看、列举的权限
-    verbs: ["create","get", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "deployments" ]    #对所有namespace下的deploy有创建、查看、列举的权限
+    verbs: ["create", "get", "list", "watch" ]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
