@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-mysql-config   #创建名称为pv-nfs-mysql-config的PersistentVolue的持久卷   如果是手动分配，那么需要手动创建Nfs目录
+  namespace: cl-dev  #使用的名称空间
+  labels:
+    type: pv-nfs-mysql-config
+spec:
+  capacity:
+    storage: 20Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: nfs-sc-0   #指定sc
+  nfs:   #使用NFS方式挂载
+    path: /nfs/data/clmom-mysql-config   #指定挂载到nfs的目录下
+    server: 192.168.56.106   # nfs服务端ip
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-mysql-data   #创建名称为pv-nfs-mysql-data的PersistentVolue的持久卷  如果是手动分配，那么需要手动创建Nfs目录
+  namespace: cl-dev  #使用的名称空间
+  labels:
+    type: pv-nfs-mysql-data
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: nfs-sc-0  #指定sc
+  nfs:   #使用NFS方式挂载
+    path: /nfs/data/clmom-mysql-data   #指定挂载到nfs的目录下
+    server: 192.168.56.106   # nfs服务端ip
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-mysql-config2   #创建名称为pv-nfs-mysql-config的PersistentVolue的持久卷   如果是手动分配，那么需要手动创建Nfs目录
+  namespace: cl-dev  #使用的名称空间
+  labels:
+    type: pv-nfs-mysql-config2
+spec:
+  capacity:
+    storage: 20Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: nfs-sc-0   #指定sc
+  nfs:   #使用NFS方式挂载
+    path: /nfs/data/clmom-mysql-config   #指定挂载到nfs的目录下
+    server: 192.168.56.106   # nfs服务端ip
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-mysql-data2   #创建名称为pv-nfs-mysql-data的PersistentVolue的持久卷  如果是手动分配，那么需要手动创建Nfs目录
+  namespace: cl-dev  #使用的名称空间
+  labels:
+    type: pv-nfs-mysql-data2
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  #  Retain 需要手动删除资源，Recycle自动删除资源（过时），Delete彻底删除pv
+  storageClassName: nfs-sc-0  #指定sc
+  nfs:   #使用NFS方式挂载
+    path: /nfs/data/clmom-mysql-data   #指定挂载到nfs的目录下
+    server: 192.168.56.106   # nfs服务端ip
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+  namespace: cl-dev
+data:
+  mysql_root_password: MXFhejJ3c3gh   #   mysql数据库root用户密码  Base64加密后的内容
+  mysql_password: MXFhejJ3c3gh  #  mysql自定义的用户的密码
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-configmap
+  namespace: cl-dev
+data:
+  mysql_user: test1   # mysql自定义用户名
+  mysql_database: cl_testmom   #指定mysql的数据库名
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-statefulset   #设置statefulset取名字
+  namespace: cl-dev   #所属名称空间
+spec:
+  selector:
+    matchLabels:
+      app: mysql-statefulset # 匹配pod的标签 has to match .spec.template.metadata.labels
+  serviceName: "mysql-statefulset-service"    #  匹配service名称
+  replicas: 2 # 两个副本 by default is 1
+  template:
+    metadata:
+      labels:
+        app: mysql-statefulset # 设置pod的标签，让statefulset匹配 has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 30   # pod优雅终止需要时间，30S ,默认30S
+      containers:   #pod里的容器
+        - name: mysql8
+          image: mysql:8.0.29   #指定mysql镜像版本号
+          imagePullPolicy: IfNotPresent    #如果本地存在该版本镜像，那么不从远程仓库拉取
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:   #使用secrets加密配置
+                  name: mysql-secrets   #指定secrets名字
+                  key: mysql_root_password   #指定secrets下的键
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:   #使用configmap配置
+                  name: mysql-configmap   #指定configmap名字
+                  key: mysql_user     #指定configmap名字下的键
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets   #指定secrets名字
+                  key: mysql_password #指定secrets下的键
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap   #指定configmap名字
+                  key: mysql_database   #指定configmap名字下的键
+          ports:
+            - containerPort: 3306    #mysql容器内的端口号
+              name: mysqlport
+          volumeMounts:
+            - name: mysql-config    #挂载mysql配置文件
+              mountPath: /etc/mysql/conf.d
+            - name: mysql-data    #挂载mysql数据文件
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:   #挂载mysql配置文件和数据文件
+    - metadata:
+        name: mysql-config   #对应volumeMounts挂载的name
+      spec:
+        accessModes: [ "ReadWriteMany" ]  #可以备多个节点读写
+        storageClassName: "nfs-sc-0"  #volumeName: ""  #指定pv名字,  storageClassName: "my-storage-class" 由于sc自动分配存在问题，暂时使用手动分配
+        resources:
+          requests:
+            storage: 20Mi   #申请资源，配置文件
+    - metadata:
+        name: mysql-data   #对应volumeMounts挂载的name
+      spec:
+        accessModes: [ "ReadWriteMany" ]  #可以备多个节点读写
+        storageClassName: "nfs-sc-0"  #volumeName: ""  #指定pv名字,  storageClassName: "my-storage-class" 由于sc自动分配存在问题，暂时使用手动分配
+        resources:
+          requests:
+            storage: 100Mi   #申请资源，配置文件
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-statefulset-service   #名字需要和statefulset的serviceName匹配
+  namespace: cl-dev
+spec:
+  selector:
+    app: mysql-statefulset   #根据标签命中的pod
+  type: NodePort   #ExternalName, ClusterIP, NodePort, and LoadBalancer
+  ports:
+    - name: mysql-statefulset-service-port
+      port: 3306   #集群端口
+      targetPort: 3306   #映射到pod内部端口  nodePort: 30056   #如果没有指定nodeport，那么会自动分配30000-30256范围内的端口

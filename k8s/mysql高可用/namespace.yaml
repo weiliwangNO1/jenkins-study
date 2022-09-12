@@ -1,0 +1,4 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cl-dev    #创建一个namespace
