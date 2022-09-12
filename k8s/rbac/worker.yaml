@@ -9,13 +9,13 @@ rules:
   - apiGroups: [ "" ]
     resources: [ "pods" ]    #对所有namespace下的pods只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
-  - apiGroups: [ "" ]
+  - apiGroups: [ "apps" ]   #apigroups需要设置资源所属的组别
     resources: [ "deployments" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
   - apiGroups: [ "" ]
     resources: [ "services" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
-  - apiGroups: [ "" ]
+  - apiGroups: [ "networking.k8s.io", "extensions" ]
     resources: [ "ingresses" ]    #对所有namespace下的deploy只有查看、列举的权限
     verbs: [ "get", "list", "watch" ]
 
@@ -26,7 +26,7 @@ metadata:
   name: worker
   namespace: test-ns
 rules:
-  - apiGroups: [ "" ]
+  - apiGroups: [ "apps" ]
     resources: [ "deployments" ]    #对所有namespace下的deploy有创建、查看、列举的权限
     verbs: ["create", "get", "list", "watch" ]
 
