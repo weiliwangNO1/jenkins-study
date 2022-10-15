@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-clusterip-test
-  namespace: test-ns
+  namespace: blog
 spec:
   selector:
     app: canary-nginx

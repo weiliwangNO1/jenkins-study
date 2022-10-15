@@ -24,7 +24,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: worker
-  namespace: test-ns
+  namespace: blog
 rules:
   - apiGroups: [ "apps" ]
     resources: [ "deployments" ]    #对所有namespace下的deploy有创建、查看、列举的权限
@@ -35,11 +35,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: worker
-  namespace: test-ns
+  namespace: blog
 subjects:
   - kind: ServiceAccount
     name: worker #区分大小写的  需要绑定的serviceaccount
-    namespace: test-ns   #指定是哪个名称空间下的
+    namespace: blog   #指定是哪个名称空间下的
     apiGroup: ""
 roleRef:   #绑定角色role
   kind: Role
@@ -54,7 +54,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: worker      # 'name' 是区分大小写的  需要绑定的serviceaccount
-    namespace: test-ns   #指定是哪个名称空间下的
+    namespace: blog   #指定是哪个名称空间下的
     apiGroup: ""
 roleRef:
   kind: ClusterRole   #需要绑定的角色

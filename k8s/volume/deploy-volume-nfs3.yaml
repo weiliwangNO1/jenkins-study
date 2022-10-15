@@ -2,7 +2,7 @@ kind: Deployment   #定义Deployment
 apiVersion: apps/v1   #版本
 metadata:    #定义元数据
   name: deploy-volume-nfs3   #Deployment名称为deploy-volume-nfs3
-  namespace: test-ns   #使用的名称空间为test-ns
+  namespace: blog   #使用的名称空间为blog
   labels:    #为Deployment设置标签
     name: deploy-volume-nfs3
     type: deploy
@@ -14,7 +14,7 @@ spec:    ##设置期望状态  规约
   template:   #标准
     metadata:
       name: pod-nfs3
-      namespace: test-ns
+      namespace: blog
       labels:
         type: pod-nfs3
     spec:   #规约，期望状态
@@ -73,7 +73,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-nginx-nfs
-  namespace: test-ns
+  namespace: blog
 spec:
   selector:
     type: pod-nfs3   #根据标签命中的pod
@@ -88,7 +88,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: secret-mysql-nfs3
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_root_password: MXFhejJ3c3gh   #   mysql数据库root用户密码  Base64加密后的内容
   mysql_password: MXFhejJ3c3gh  #  mysql自定义的用户的密码，对应的configmap的mysql_user
@@ -98,7 +98,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap-mysql-nfs3
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_user: test1   # mysql自定义用户名
   mysql_database: cl_testmom   #指定mysql的数据库名

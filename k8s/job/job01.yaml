@@ -2,7 +2,7 @@ kind: Job
 apiVersion: batch/v1
 metadata:
   name: job-test01
-  namespace: test-ns
+  namespace: blog
   labels:
     app: job-test01
 spec:

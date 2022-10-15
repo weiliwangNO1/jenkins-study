@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: canary-service-v1
-  namespace: test-ns
+  namespace: blog
   labels:
     app: canary-service-v1
     name: canary-service-v1

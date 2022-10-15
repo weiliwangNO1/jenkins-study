@@ -2,7 +2,7 @@ kind: Deployment   #定义Deployment
 apiVersion: apps/v1   #版本
 metadata:    #定义元数据
   name: deploy-mysql-configmap   #Deployment名称为deploy-mysql
-  namespace: test-ns   #使用的名称空间为test-ns
+  namespace: blog   #使用的名称空间为blog
   labels:    #为Deployment设置标签
     name: deploy-mysql-configmap
     type: deployment
@@ -14,7 +14,7 @@ spec:    ##设置期望状态  规约
   template:   #标准末班
     metadata:
       name: pod-mysql2-configmap
-      namespace: test-ns
+      namespace: blog
       labels:
         type: pod-mysql2-configmap
     spec:   #规约，期望状态
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: secret-mysql
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_root_password: MXFhejJ3c3gh   #   mysql数据库root用户密码  Base64加密后的内容
   mysql_password: MXFhejJ3c3gh  #  mysql自定义的用户的密码，对应的configmap的mysql_user
@@ -61,7 +61,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap-mysql
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_user: test1   # mysql自定义用户名
   mysql_database: cl_testmom   #指定mysql的数据库名

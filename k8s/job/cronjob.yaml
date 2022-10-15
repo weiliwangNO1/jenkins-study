@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cronjob-test
-  namespace: test-ns
+  namespace: blog
 spec:
   schedule: "* * * * *"    #定时器执行，每分钟
   jobTemplate:   #job模板

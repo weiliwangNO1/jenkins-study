@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: canary-deployv1
-  namespace: test-ns
+  namespace: blog
   labels:
     app: canary-deployv1
 spec:

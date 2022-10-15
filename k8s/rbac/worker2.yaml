@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: worker
-  namespace: test-ns
+  namespace: blog
   labels:
     role-type: worker
 
@@ -30,7 +30,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: worker      # 'name' 是区分大小写的  需要绑定的serviceaccount
-    namespace: test-ns   #指定是哪个名称空间下的
+    namespace: blog   #指定是哪个名称空间下的
     apiGroup: ""
 roleRef:
   kind: ClusterRole   #需要绑定的角色

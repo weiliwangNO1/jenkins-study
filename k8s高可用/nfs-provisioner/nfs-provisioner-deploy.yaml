@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: nfs-client-provisioner
-  namespace: test-ns
+  namespace: default
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -32,7 +32,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
-    namespace: test-ns
+    namespace: default
 roleRef:
   kind: ClusterRole
   name: nfs-client-provisioner-runner
@@ -42,7 +42,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: leader-locking-nfs-client-provisioner
-  namespace: test-ns
+  namespace: default
 rules:
   - apiGroups: [""]
     resources: ["endpoints"]
@@ -52,11 +52,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: leader-locking-nfs-client-provisioner
-  namespace: test-ns
+  namespace: default
 subjects:
   - kind: ServiceAccount
     name: nfs-client-provisioner
-    namespace: test-ns
+    namespace: default
 roleRef:
   kind: Role
   name: leader-locking-nfs-client-provisioner
@@ -69,7 +69,7 @@ metadata:
   name: nfs-client-provisioner
   labels:
     app: nfs-client-provisioner  # replace with namespace where provisioner is deployed
-  namespace: test-ns   #指定test-ns名称空间
+  namespace: default   #指定blog名称空间
 spec:
   replicas: 1  #1个副本
   strategy:
@@ -91,7 +91,7 @@ spec:
               mountPath: /persistentvolumes
           env:
             - name: PROVISIONER_NAME
-              value: k8s-sigs.io/nfs-subdir-external-provisioner    # provisioner提供者名字，建立storageClass的provisioner需要指定为这个
+              value: nfs-provisioner    # provisioner提供者名字，建立storageClass的provisioner需要指定为这个
             - name: NFS_SERVER
               value: 192.168.56.101    #指定nfs服务端的IP地址
             - name: NFS_PATH

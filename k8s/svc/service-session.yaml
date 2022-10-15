@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-nodeport-session-test
-  namespace: test-ns
+  namespace: blog
 spec:
   selector:
     app: canary-nginx   #根据标签命中的pod

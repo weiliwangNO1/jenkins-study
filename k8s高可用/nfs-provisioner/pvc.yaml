@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-test
+  namespace: blog
+spec:
+  storageClassName: nfs-sc-1 # 需要与上面创建的storageclass的名称一致
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi

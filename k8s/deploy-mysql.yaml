@@ -2,7 +2,7 @@ kind: Deployment   #定义Deployment
 apiVersion: apps/v1   #版本
 metadata:    ##定义元数据
   name: deploy-mysql   ##Deployment名称为deploy-mysql
-  namespace: test-ns   #使用的名称空间为test-ns
+  namespace: blog   #使用的名称空间为blog
   labels:    #为Deployment设置标签
     name: deploy-mysql
     author: weiliwang
@@ -15,7 +15,7 @@ spec:    ##设置期望状态  规约
   template:   #标准末班
     metadata:
       name: deploy-mysql
-      namespace: test-ns
+      namespace: blog
       labels:
         name: deploy-mysql
         author: weiliwang

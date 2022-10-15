@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1   #版本
 metadata:
   name: deploy-mulit-containers
-  namespace: test-ns
+  namespace: blog
   labels:
     name: deploy-mulit-containers
     author: weiliwang

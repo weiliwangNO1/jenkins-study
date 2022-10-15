@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-test03
-  namespace: test-ns
+  namespace: blog
 spec:
   activeDeadlineSeconds: 60   #job执行成功后可以存活10秒后complate
   completions: 10  #job需要执行10次

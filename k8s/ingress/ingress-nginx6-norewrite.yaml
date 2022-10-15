@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-nginx6-norewrite   #设置ing名称
-  namespace: test-ns   #如果制定了名称空间，那么绑定的service必须在该名称空间下，否则无法访问
+  namespace: blog   #如果制定了名称空间，那么绑定的service必须在该名称空间下，否则无法访问
   annotations:
     nginx.ingress.kubernetes.io/limit-rps: "1"   #1秒内只允许访问1次，超过则返回503
 spec:
@@ -15,6 +15,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: service-nginx   #指向service服务并且该service在test-ns名称空间下
+                name: service-nginx   #指向service服务并且该service在blog名称空间下
                 port:
                   number: 80   #service内部暴露的端口

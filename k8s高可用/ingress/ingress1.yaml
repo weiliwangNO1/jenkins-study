@@ -22,6 +22,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: nginx-svc   #指向service服务并且该service在test-ns名称空间下
+                name: nginx-svc   #指向service服务并且该service在blog名称空间下
                 port:
                   number: 80   #service内部暴露的端口

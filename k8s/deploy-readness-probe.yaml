@@ -2,7 +2,7 @@ kind: Deployment   #定义deploy
 apiVersion: apps/v1   #版本
 metadata:    #定义元数据
   name: deploy-readness-probe-nginx   #定义的deploy名称为deploy-readness-prode-nginx存活探针
-  namespace: test-ns    #使用的名称空间维test-ns
+  namespace: blog    #使用的名称空间维blog
   labels:    #定义标签
     app: deploy-readness-probe-nginx
 spec:   #规约，pod创建的期望状态

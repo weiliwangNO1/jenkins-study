@@ -2,7 +2,7 @@ kind: Deployment   #定义Deployment
 apiVersion: apps/v1   #版本
 metadata:    #定义元数据
   name: deploy-volume-pvc-nfs-sc   #Deployment名称为deploy-volume-pvc-nfs-sc
-  namespace: test-ns   #使用的名称空间为test-ns
+  namespace: blog   #使用的名称空间为blog
   labels:    #为Deployment设置标签
     name: deploy-volume-pvc-nfs-sc
     type: deploy
@@ -14,7 +14,7 @@ spec:    ##设置期望状态  规约
   template:   #标准
     metadata:
       name: pod-pvc-nfs-sc
-      namespace: test-ns
+      namespace: blog
       labels:
         type: pod-pvc-nfs-sc   # 声明pod的标签
     spec:   #规约，期望状态
@@ -68,7 +68,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim    #持久卷申请
 metadata:
   name: pvc-nginx
-  namespace: test-ns
+  namespace: blog
   labels:
     name: pvc-nginx-nfs-sc
 spec:
@@ -84,7 +84,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim    #持久卷申请
 metadata:
   name: pvc-mysql
-  namespace: test-ns
+  namespace: blog
   labels:
     name: pvc-mysql-nfs-sc
 spec:
@@ -100,7 +100,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-nginx-pvc-nfs-sc
-  namespace: test-ns
+  namespace: blog
 spec:
   selector:
     type: pod-pvc-nfs-sc   #根据标签命中的pod
@@ -115,7 +115,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: secret-mysql-nfs3
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_root_password: MXFhejJ3c3gh   #   mysql数据库root用户密码  Base64加密后的内容
   mysql_password: MXFhejJ3c3gh  #  mysql自定义的用户的密码，对应的configmap的mysql_user
@@ -125,7 +125,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: configmap-mysql-nfs3
-  namespace: test-ns
+  namespace: blog
 data:
   mysql_user: test1   # mysql自定义用户名
   mysql_database: cl_testmom   #指定mysql的数据库名

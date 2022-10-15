@@ -2,7 +2,7 @@ kind: Deployment   #定义Deployment
 apiVersion: apps/v1   #版本
 metadata:    #定义元数据
   name: deploy-nginx-volume-nfs   #Deployment名称为deploy-mysql-volume-nfs
-  namespace: test-ns   #使用的名称空间为test-ns
+  namespace: blog   #使用的名称空间为blog
   labels:    #为Deployment设置标签
     name: deploy-nginx-volume-nfs
     type: deploy
@@ -14,7 +14,7 @@ spec:    ##设置期望状态  规约
   template:   #标准
     metadata:
       name: pod-nginx-nfs
-      namespace: test-ns
+      namespace: blog
       labels:
         type: pod-nginx-nfs
     spec:   #规约，期望状态
@@ -39,7 +39,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-nginx-nfs
-  namespace: test-ns
+  namespace: blog
 spec:
   selector:
     type: pod-nginx-nfs   #根据标签命中的pod

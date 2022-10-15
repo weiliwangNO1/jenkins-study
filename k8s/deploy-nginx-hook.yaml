@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1   #版本
 metadata:
   name: deploy-nginx-hook
-  namespace: test-ns
+  namespace: blog
   labels:
     name: deploy-nginx-hook
     author: weiliwang
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       name: deploy-nginx-hook
-      namespace: test-ns
+      namespace: blog
       labels:
         name: deploy-nginx-hook
         author: weiliwang

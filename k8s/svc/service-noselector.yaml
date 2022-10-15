@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: service-noselector-test
-  namespace: test-ns
+  namespace: blog
 spec:
   type: ClusterIP   #ExternalName, ClusterIP, NodePort, and LoadBalancer
   ports:
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: Endpoints
 metadata:
   name: service-noselector-test   #要和noselector的service的name保持一致
-  namespace: test-ns
+  namespace: blog
 subsets:
   - addresses:
       - ip: 192.168.169.158
