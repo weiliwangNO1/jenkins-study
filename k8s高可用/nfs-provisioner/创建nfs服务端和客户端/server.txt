@@ -1,0 +1,17 @@
+# 在任意机器
+yum install -y nfs-utils
+#执行命令 vi /etc/exports，创建 exports 文件，文件内容如下：
+echo "/nfs/data/ *(insecure,rw,sync,no_root_squash)" > /etc/exports
+#/nfs/data  172.26.248.0/20(rw,no_root_squash)
+
+# 执行以下命令，启动 nfs 服务;创建共享目录
+mkdir -p /nfs/data
+systemctl enable rpcbind
+systemctl enable nfs-server
+systemctl start rpcbind
+systemctl start nfs-server
+exportfs -r
+#检查配置是否生效
+exportfs
+# 输出结果如下所示
+/nfs/data /nfs/data
