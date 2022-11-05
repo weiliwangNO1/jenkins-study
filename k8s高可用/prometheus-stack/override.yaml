@@ -1,0 +1,32 @@
+alertmanager:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - alertmanager.blog.com
+    paths:
+      - /
+    pathType: Prefix
+
+
+grafana:
+  enabled: true
+  defaultDashboardsEnabled: true
+  adminPassword: admin123456
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.blog.com
+    path: /
+    pathType: Prefix
+
+
+prometheus:
+  ingress:
+    enabled: true
+    hosts: [prometheus.blog.com]
+    paths:
+      - /
+    pathType: Prefix
+    additionalPodMonitors:
+      - name: registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images/kube-state-metrics:v2.0.0
