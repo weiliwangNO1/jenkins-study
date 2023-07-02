@@ -10,6 +10,10 @@ vim volume.yaml
 kubectl apply -f volume.yaml
 
 #4.Create a deployment YAML and deploy it.
+vim deployment.yaml
+kubectl apply -f deployment.yaml
 
 #5.Create a service YAML and deploy it.
+vim service.yaml
+kubectl apply -f service.yaml
 
