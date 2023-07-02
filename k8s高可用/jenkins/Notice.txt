@@ -1,0 +1,15 @@
+#1.Create a Namespace
+kubectl create namespace devops-tools
+
+#2.Create a service account with Kubernetes admin permissions.
+vim serviceAccount.yaml
+kubectl apply -f serviceAccount.yaml
+
+#3.Create local persistent volume for persistent Jenkins data on Pod restarts.
+vim volume.yaml
+kubectl apply -f volume.yaml
+
+#4.Create a deployment YAML and deploy it.
+
+#5.Create a service YAML and deploy it.
+
